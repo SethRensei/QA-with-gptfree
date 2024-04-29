@@ -1,15 +1,23 @@
-from QaS import Chunk, Embedding
 from Voice import Voice
+from QaS import Embedding, Chunk, CustomLLM, Conversation
 
-voice = Voice()
+if __name__ == '__main__':
 
-if __name__ == "__main__":
-    
     text = Chunk.getText('./datas.pdf')
-    chunks = Chunk.createChunks(text=text, ch_size=2000)
-    emb = Embedding.getEmbedding()
+    chunks = Chunk.createChunks(text)
+    emb = Embedding.getEmbedding("./LocalModel")
+
+    knowledge_base = Conversation.getDatabase(chunk=chunks, embedding=emb)
+
+    voice = Voice()
+    llm = CustomLLM()
+    chain = Conversation.loadQA(llm=llm)
     
-    # result est un tableau 
-    result = emb.embed_query('Le texte à vectoriser')
-    
-    print(result)
+    voice.say('Salut, je suis votre assistant. Comment puis-je vous aider ?')
+    user_query = input('Vous : ')
+
+    while user_query.lower() != 'sortir':
+        response = Conversation.getReponse(chain=chain, data=knowledge_base, query=user_query)
+        voice.say(response)
+        print(f'Bot : {response}')
+        user_query = input('Vous : ')

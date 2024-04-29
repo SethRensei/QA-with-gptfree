@@ -46,13 +46,13 @@ class Embedding():
     """
         
     @classmethod
-    def getEmbedding(cls):
+    def getEmbedding(cls, model):
         """Une méthode qui permet d'obtenir un embedding que l'on poura utiliser partout
-        """        
-        model_name = "./LocalModel"
+        """
+        
         model_kwargs = {'device': 'cpu'}
         embeddings = HuggingFaceEmbeddings(
-            model_name=model_name,
+            model_name=model,
             model_kwargs=model_kwargs,
         )
         
