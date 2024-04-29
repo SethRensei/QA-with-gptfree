@@ -73,5 +73,8 @@ class Conversation():
             _type_: La réponse à la question
         """        
         docs = data.similarity_search(query)
-        response = chain.run(input_documents=docs, question=query)
-        return response
+        input_data = {
+            'input_documents': docs,
+            'question': query,
+        }
+        return chain.invoke(input=input_data)

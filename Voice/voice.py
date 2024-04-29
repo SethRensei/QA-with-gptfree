@@ -8,7 +8,7 @@ class Voice():
         # rate = engine.getProperty('rate')
         # engine.setProperty('rate', rate )
         voices = engine.getProperty('voices')
-        engine.setProperty('voices', voices[1].id)
+        engine.setProperty('voice', voices[3].id)
         engine.say(text)
         engine.runAndWait()
         

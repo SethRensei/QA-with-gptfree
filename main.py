@@ -18,6 +18,6 @@ if __name__ == '__main__':
 
     while user_query.lower() != 'sortir':
         response = Conversation.getReponse(chain=chain, data=knowledge_base, query=user_query)
-        voice.say(response)
-        print(f'Bot : {response}')
+        voice.say(response["output_text"])
+        # print(f'Bot : {response}')
         user_query = input('Vous : ')
