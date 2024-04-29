@@ -1,4 +1,5 @@
 import pyttsx3 as p
+import speech_recognition as sr
 
 class Voice():
 
@@ -10,3 +11,23 @@ class Voice():
         engine.setProperty('voices', voices[1].id)
         engine.say(text)
         engine.runAndWait()
+        
+    
+    def listener(self):
+        
+        r = sr.Recognizer()
+
+        with sr.Microphone() as source:
+            
+            print("Entrain d'écouter...")
+            r.pause_threshold = 1
+            audio = r.listen(source)
+    
+        try:
+            query = r.recognize_google(audio, language ='fr')
+    
+        except Exception as e:
+            print(e)
+            return "None"
+        
+        return query
