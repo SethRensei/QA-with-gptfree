@@ -1,7 +1,5 @@
 .venv/
-LocalModels/
 LocalModel/
-DevTest/
 *.pdf
 
 # Byte-compiled / optimized / DLL files
