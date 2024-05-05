@@ -9,7 +9,6 @@ def main(path, ch_size:int = 3000, ch_over:int = 200):
     
     text_splitter = TokenTextSplitter(chunk_size=ch_size, chunk_overlap=ch_over)
     texts = text_splitter.split_text(path)
-    print(texts)
     docs = [Document(page_content=text) for text in texts]
     
     llm: LLM = G4FLLM(
