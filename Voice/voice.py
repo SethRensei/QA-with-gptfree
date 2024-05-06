@@ -18,8 +18,6 @@ class Voice():
         r = sr.Recognizer()
 
         with sr.Microphone() as source:
-            
-            print("Entrain d'écouter...")
             r.pause_threshold = 1
             audio = r.listen(source)
     
@@ -27,7 +25,6 @@ class Voice():
             query = r.recognize_google(audio, language ='fr')
     
         except Exception as e:
-            print(e)
             return "None"
         
         return query
