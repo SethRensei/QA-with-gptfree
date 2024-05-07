@@ -28,53 +28,49 @@ class CustomLLM(LLM):
     @classmethod
     def promptSystem(self):
         template = """
-            Tu dois répondre aux questions dont les réponses ne sont pas inclue dans les informations fournies.
-            Si la question n'a pas de réponse, tu peux le faire comprendre aux utilisateur\n
-            
-            {context}\n
-            
-            user_question : {question}
-            
-            Answer : 
-            """
-        return PromptTemplate(template=template, input_variables=['context', 'question'])
+        Vous es Seth Rensei, un assistant routier. Vous devriez répondre à la question de la fin en utilisant le contexte suivant.
+        Si la réponse n'est pas inclu dans le contexte, dites simplement que vous ne connaissez pas.
+        N'essayez pas d'inventer de réponse.
+
+        Context : {context}\n
+
+        Question : {question}\n
+
+        """
+
+        return PromptTemplate(input_variables=['context', 'question'], template=template)
 
 
 
 class Conversation():
     
     @classmethod
-    def getDatabase(cls, chunk, embedding):
-        """Retourne la notre base de données qui sera les connaissances du SQR
+    def createDBVector(cls, chunks, embedding, path:str):
+        """Crée et enregistre la base de données vectorielles
 
         Args:
             chunk (_type_): La liste contenant le texte segmenter
-            embedding (_type_): La représentation numérique des mots
+            embedding (_type_): La représentation vectorielles (nombres) des mots
+            path (str): Le chemin pour enregistrer la base de données
 
         Returns:
             _type_: Une base de connaissance utilisable pour notre SQR
         """        
-        return faiss.FAISS.from_texts(chunk, embedding=embedding)
+        knowlegde_base = faiss.FAISS.from_documents(chunks, embedding=embedding)
+        knowlegde_base.save_local(path)
+        
+        return knowlegde_base
     
     @classmethod
-    def loadQA(cls, llm):
-        return load_qa_chain(llm, chain_type="stuff")
-    
-    @classmethod
-    def getReponse(cls, chain: BaseCombineDocumentsChain, data:faiss.FAISS, query:str):
-        """Cette méthode donne la réponse à une question
+    def getDatabase(cls, embeddings, path:str):
+        """_summary_
 
         Args:
-            llm (_type_): Le modèle LLM à utiliser
-            data (faiss.FAISS): La base de connaissance
-            query (str): La requête ou la question
+            embeddings (_type_): La représentation vectorielles (nombres) des mots
+            path (str): Le chemin vers le dossier de la base de connaissances
 
         Returns:
-            _type_: La réponse à la question
+            _type_: _description_
         """        
-        docs = data.similarity_search(query)
-        input_data = {
-            'input_documents': docs,
-            'question': query,
-        }
-        return chain.invoke(input=input_data)
+        loaded_vectors = faiss.FAISS.load_local(folder_path=path, embeddings=embeddings)
+        return loaded_vectors.as_retriever()
