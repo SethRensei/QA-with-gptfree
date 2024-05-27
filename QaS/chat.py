@@ -30,6 +30,11 @@ class Conversation():
     
     @classmethod
     def promptSystem(self):
+        """Définition d'un modèle de prompt pour le LLM
+
+        Returns:
+            PromptTemplate: le modèle de prompt
+        """        
         template = """
         Vous es Seth Rensei, un assistant routier. Vous devriez répondre à la question de la fin en utilisant le contexte suivant.
         Si la réponse n'est pas inclu dans le contexte, dites simplement que vous ne connaissez pas.
