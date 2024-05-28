@@ -4,11 +4,6 @@ import speech_recognition as sr
 class Voice():
 
     def say(self, text):
-        """Cette méthode permet de transformer du texte en audio (syntèse vocale)
-
-        Args:
-            text (_type_): _description_
-        """        
         engine = p.init()
         # rate = engine.getProperty('rate')
         # engine.setProperty('rate', rate )
@@ -19,11 +14,6 @@ class Voice():
         
     
     def listener(self):
-        """Cette méthode permet d'écouter sur le microphone interne (reconnaissance vocale)
-
-        Returns:
-            Any | Literal['None'] : La transciption de l'audio en texte
-        """        
         
         r = sr.Recognizer()
 
