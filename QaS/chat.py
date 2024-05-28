@@ -3,9 +3,7 @@ from g4f import Provider, models
 from langchain.llms.base import LLM
 from typing import List, Any
 from langchain.prompts import PromptTemplate
-from langchain.chains.combine_documents.base import BaseCombineDocumentsChain
 from langchain_community.vectorstores import faiss
-from langchain.chains.question_answering import load_qa_chain
 
 class CustomLLM(LLM):
     @property
@@ -14,9 +12,9 @@ class CustomLLM(LLM):
 
     def _call(self, prompt:str, stop:List[str] = None, **kwargs:Any) -> str:
         out = g4f.ChatCompletion.create(
-            model=models.gpt_35_turbo,
+            model=models.gpt_4o,
             messages=[{"role": "user", "content": prompt}],
-            provider=Provider.OpenaiChat
+            provider=Provider.Bing
         )
         if stop:
             stop_indexes = (out.find(s) for s in stop if s in out)
@@ -36,9 +34,9 @@ class Conversation():
             PromptTemplate: le modèle de prompt
         """        
         template = """
-        Vous es Seth Rensei, un assistant routier. Vous devriez répondre à la question de la fin en utilisant le contexte suivant.
+        Vous êtes un assistant virtuel. Vous devriez répondre à la question de la fin en utilisant le contexte suivant.
         Si la réponse n'est pas inclu dans le contexte, dites simplement que vous ne connaissez pas.
-        N'essayez pas d'inventer de réponse.
+        N'essayez pas d'inventer de réponse. Vos réponses doivent être simple et concise
 
         Context : {context}\n
 
@@ -67,14 +65,14 @@ class Conversation():
     
     @classmethod
     def getDatabase(cls, embeddings, path:str):
-        """_summary_
+        """Cette méthode permet de se connecter avec la base de données vectorielle local
 
         Args:
             embeddings (_type_): La représentation vectorielles (nombres) des mots
             path (str): Le chemin vers le dossier de la base de connaissances
 
         Returns:
-            _type_: _description_
-        """        
+            VectorStoreRetriever: la récupération des documents à partir d'une database vectorielle. 
+        """     
         loaded_vectors = faiss.FAISS.load_local(folder_path=path, embeddings=embeddings, allow_dangerous_deserialization=True)
         return loaded_vectors.as_retriever()
