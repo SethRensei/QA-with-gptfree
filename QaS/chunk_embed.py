@@ -10,7 +10,7 @@ class Chunk():
     @classmethod
     def getDocs(cls, path:str):
         if os.path.exists(path):
-            loader = PyPDFLoader(file_path='../datas.pdf')
+            loader = PyPDFLoader(file_path=path)
             docs = loader.load()
             
             return docs
