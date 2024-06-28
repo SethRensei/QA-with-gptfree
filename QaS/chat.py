@@ -12,9 +12,9 @@ class CustomLLM(LLM):
 
     def _call(self, prompt:str, stop:List[str] = None, **kwargs:Any) -> str:
         out = g4f.ChatCompletion.create(
-            model=models.gpt_4o,
+            model=models.gpt_35_turbo,
             messages=[{"role": "user", "content": prompt}],
-            provider=Provider.Bing
+            provider=Provider.FreeGpt
         )
         if stop:
             stop_indexes = (out.find(s) for s in stop if s in out)
@@ -34,9 +34,9 @@ class Conversation():
             PromptTemplate: le modèle de prompt
         """        
         template = """
-        Vous êtes un assistant virtuel. Vous devriez répondre à la question de la fin en utilisant le contexte suivant.
-        Si la réponse n'est pas inclu dans le contexte, dites simplement que vous ne connaissez pas.
-        N'essayez pas d'inventer de réponse. Vos réponses doivent être simple et concise
+        Vous devriez répondre à la question de la fin en utilisant le contexte suivant.
+        Ne fournissez aucune réponse hors de ce contexte, dites simplement que vous ne connaissez pas et n'ajoutez rien.
+        Vos réponses doivent être simple et concise. Vos réponses doivent toujours en français, toute autre langue n'est pas autorisée
 
         Context : {context}\n
 
